@@ -9,7 +9,24 @@ import numpy as np  #para trabajar con arrays
 import argparse  #para generar la interface del usuario
 
 
+# Define parser data
+parser = argparse.ArgumentParser(description='Imprime si la coordenada es tierra o agua')
+    # First arguments. Lat Lon. 
+parser.add_argument('coords', metavar='Lat Lon', type=float, nargs=2,\
+		      help='Latitude Longitude')
+#    # Specify sattelites to exclude from command line. TODO: change to flag!
+#    parser.add_argument('--no-ascat', dest='ascat_bool', action="store_true", \
+#		      default= False, help="Don't display ASCAT information")
 
+    # Extract dates from args
+args=parser.parse_args()
+#    initialDate = args.date[0]
+#finalDate = args.date[1]
+
+lat_ing = args.coords[0]
+lon_ing = args.coords[1]
+#lat_ing = -43.5;
+#lon_ing = 130.25;
 
 
 file='./Clase_2/Hands-On/data/gl-latlong-1km-landcover.bsq'
@@ -48,8 +65,6 @@ print(mascara.shape)
 
 #dadas dos coordenadas busco el punto mas cercano y me fijo si es tierra o agua
 
-lat_ing = -43.5;
-lon_ing = 130.25;
 
 cota_lat = np.amin(np.abs(lat-lat_ing))
 cota_lon = np.amin(np.abs(lon-lon_ing))
