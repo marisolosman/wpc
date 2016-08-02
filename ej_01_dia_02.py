@@ -12,8 +12,12 @@ import argparse  #para generar la interface del usuario
 # Define parser data
 parser = argparse.ArgumentParser(description='Imprime si la coordenada es tierra o agua')
     # First arguments. Lat Lon. 
-parser.add_argument('coords', metavar='Lat Lon', type=float, nargs=2,\
-		      help='Latitude Longitude')
+parser.add_argument('--lat', metavar='degrees north', type=float, nargs=1,\
+		      help='Latitude',required=True)
+parser.add_argument('--lon',metavar='degrees east',type=float, nargs=1,\
+                    help=' Longitude',required=True)
+parser.add_argument('--quiet',type=bool,nargs=1,default=False,help='True para testear')
+
 #    # Specify sattelites to exclude from command line. TODO: change to flag!
 #    parser.add_argument('--no-ascat', dest='ascat_bool', action="store_true", \
 #		      default= False, help="Don't display ASCAT information")
@@ -23,8 +27,9 @@ args=parser.parse_args()
 #    initialDate = args.date[0]
 #finalDate = args.date[1]
 
-lat_ing = args.coords[0]
-lon_ing = args.coords[1]
+lat_ing = args.lat[0]
+lon_ing = args.lon[0]
+quiet=args.quiet
 #lat_ing = -43.5;
 #lon_ing = 130.25;
 
@@ -51,7 +56,8 @@ file='./Clase_2/Hands-On/data/gl-latlong-1km-landcover.bsq'
 #x['time']['min'] = 10; x['temp'] = 98.25
 
 mascara = np.fromfile(file,dtype=np.int8, count=-1)
-print(mascara.shape)
+if quiet:
+ print(mascara.shape)
 
 dx = 360*120;
 dy = 180*120;
@@ -60,8 +66,8 @@ lat = np.array(np.linspace(90,-90,dy,endpoint=True))
 lon = np.array(np.linspace(-180,180,dx,endpoint=True))
 
 mascara = np.reshape(mascara,(dy,dx))
-
-print(mascara.shape)
+if quiet:
+ print(mascara.shape)
 
 #dadas dos coordenadas busco el punto mas cercano y me fijo si es tierra o agua
 
@@ -72,13 +78,15 @@ cota_lon = np.amin(np.abs(lon-lon_ing))
 index_lat = np.where(np.abs(lat-lat_ing)==cota_lat)[0]
 index_lon = np.where(np.abs(lon-lon_ing)==cota_lon)[0]
 
-print(index_lat,index_lon)
+if quiet:
+ print(index_lat,index_lon)
 
 if mascara[index_lat,index_lon]!=0:
   print('Tierra')
 else:
   print('Agua')
 
-print(mascara[index_lat,index_lon])
+if quiet:
+ print(mascara[index_lat,index_lon])
 
 
